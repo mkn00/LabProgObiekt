@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        List<User> users = new List<User>()
+        {
+            new User { Name = "Adam", Role = "Student", Age = 15, Marks = new int[3]{5, 4, 4}, },
+            new User { Name = "Beata", Role = "Student", Age = 14, Marks = new int[3]{5, 4, 2 }, },
+            new User { Name = "Cezary", Role = "Moderator", Age = 57, Marks = null },
+            new User { Name = "Michał", Role = "Student", Age = 15, Marks = new int[3]{4, 4, 4}, },
+            new User { Name = "Karol", Role = "Moderator", Age = 33, Marks = null },
+            new User { Name = "Zuzanna", Role = "Student", Age = 15, Marks = new int[3]{2, 4, 4 }, },
+            new User { Name = "Jhon", Role = "Student", Age = 14, Marks = new int[3]{5, 2, 3 }, },
+            new User { Name = "Dorota", Role = "Teacher", Age = 35, Marks = null },
+            new User { Name = "Carol", Role = "Teacher", Age = 44, Marks = null },
+            new User { Name = "Danuta", Role = "Student", Age = 15, Marks = new int[3]{5, 1, 1 }, },
+            new User { Name = "Małgorzata", Role = "Student", Age = 15, Marks = new int[3]{3, 4, 3 }, },
+            new User { Name = "Wiktor", Role = "Student", Age = 15, Marks = new int[3]{5, 3, 1 }, },
+            new User { Name = "Karol", Role = "Student", Age = 14, Marks = new int[3]{2, 4, 1 }, },
+            new User { Name = "Halina", Role = "Student", Age = 14, Marks = new int[3]{3, 4, 4 }, },
+            new User { Name = "Jan", Role = "Student", Age = 15, Marks = new int[3]{3, 4, 3 }, },
+            new User { Name = "Kamila", Role = "Student", Age = 15, Marks = new int[3]{5, 4, 5 }, },
+            new User { Name = "Grzegorz", Role = "Admin", Age = 30, Marks = null },
+            new User { Name = "Mariusz", Role = "Student", Age = 15, Marks = new int[3]{5, 4, 4 }, },
+            new User { Name = "Franciszek", Role = "Student", Age = 15, Marks = new int[3]{1, 4, 1 }, },
+            new User { Name = "Mateusz", Role = "Admin", Age = 21, Marks = null },
+            new User { Name = "Michał", Role = "Student", Age = 15, Marks = new int[3]{3, 2, 4}, }
+
+        };
+        //1.
+        List<string> names_1 = users.Select(user => user.Name).ToList();
+        List<string> names_2 = (from user in users
+                                select user.Name).ToList();
+        //2.
+        List<User> users_1 = users.OrderBy(user => user.Name).ToList();
+        List<User> users_2 = (from user in users
+                              orderby user.Name
+                              select user).ToList();
+        foreach (User user in users_2)
+            Console.WriteLine(user.Name);
+        //4.
+        List<string> roles_1 = users.Select(user => user.Role).Distinct().ToList();
+        List<string> roles_2 = (from user in users select user.Name).Distinct().ToList();
+        Console.WriteLine("Zad.4 Wymienione role użytkownika:");
+        foreach (string role in roles_1)
+            Console.WriteLine(role);
+        //5.
+        List<User> users_3 = users.OrderBy(users => User.Role).ToList();
+        List<User> users_4 = (from user in users orderby user.Name select user).ToList();
+        foreach (User user in users orderby user.Name select user).ToList();
+        Console.WriteLine("Zadanie 5:" + User.Role);
+    }
+}
+public class User
+{
+    public string Name { get; set; }
+    public string Role { get; set; } 
+    public int Age { get; set; }
+    public int[] Marks { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? RemovedAt { get; set; }
+}
