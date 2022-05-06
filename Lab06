@@ -53,6 +53,140 @@ public class Program
         foreach (User user in users orderby user.Name select user).ToList();
         Console.WriteLine("Zadanie 5:" + User.Role);
     }
+    //10. 
+            Console.WriteLine();
+            var NajlepszyStudent = (from user in users
+                                    where user.Marks != null && user.Marks.Length > 0
+                                    orderby user.Marks.Average() descending
+                                    select user.Name);
+
+            var NajlepszyStudent2 = users.Where(user => user.Marks != null &&
+            user.Marks.Length > 0).OrderByDescending(user => user.Marks.Average()).Select(user => user.Name);
+            Console.WriteLine("Zadanie 10");
+            foreach (var wynik_07 in NajlepszyStudent.Take(1))
+            {
+                Console.WriteLine("Najlepszym studentem jest: " + wynik_07);
+            }
+            foreach (var wynik_08 in NajlepszyStudent2.Take(1))
+            {
+                Console.WriteLine("Najlepszym studentem jest: " + wynik_08);
+            }
+
+            //11.
+            Console.WriteLine();
+            var wynik_01 = (from user in users
+                            where user.Marks != null && user.Marks.Length > 0
+                            orderby user.Marks.Length ascending
+                            select user).ToList();
+            var wynik_02 = users.Where(user => user.Marks != null &&
+            user.Marks.Length > 0).OrderBy(user => user.Marks.Length).Select(user => user);
+            Console.WriteLine("Zadanie 11");
+            foreach (var user in wynik_01.Take(1))
+            {
+                Console.WriteLine("Najmniej ocen posiada: " + user.Name);
+            }
+            foreach (var user in wynik_02.Take(1))
+            {
+                Console.WriteLine("Najmniej ocen posiada: " + user.Name);
+            }
+
+            //12. 
+            Console.WriteLine();
+            var wynik_09 = (from user in users
+                            where user.Marks != null && user.Marks.Length > 0
+                            orderby user.Marks.Length descending
+                            select user).ToList();
+            var wynik_10 = users.Where(user => user.Marks != null &&
+            user.Marks.Length > 0).OrderByDescending(user => user.Marks.Length).Select(user => user);
+            Console.WriteLine("Zadanie 12:");
+            foreach (var user in wynik_09.Take(1))
+            {
+                Console.WriteLine("Najwiecej ocen posiada: " + user.Name);
+            }
+            foreach (var user in wynik_10.Take(1))
+            {
+                Console.WriteLine("Najwiecej ocen posiada: " + user.Name);
+            }
+
+            //14. 
+            Console.WriteLine();
+            var wynik_11 = (from user in users
+                            where user.Marks != null && user.Marks.Length > 0
+                            orderby user.Marks.Average() descending
+                            select user.Name);
+            var wynik_12 = users.Where(user => user.Marks != null &&
+             user.Marks.Length > 0).OrderByDescending(user => user.Marks.Average()).Select(user => user.Name);
+            Console.WriteLine("Zadanie 14:");
+            foreach (var user in wynik_11)
+                Console.WriteLine(user);
+            Console.WriteLine();
+            foreach (var user in wynik_12)
+                Console.WriteLine(user);
+
+            //15. 
+            Console.WriteLine();
+            var srednia_13 = (from user in users
+                              where user.Marks != null && user.Marks.Length > 0
+                              select user.Marks.Average()).Average();
+            var srednia_14 = users.Where(user => user.Marks != null &&
+             user.Marks.Length > 0).Select(user => user.Marks.Average()).Average();
+            Console.WriteLine("Zadanie 15:");
+            Console.WriteLine("Średnia ocena wszystkich studentów to: "+srednia_13);
+            Console.WriteLine("Średnia ocena wszystkich studentów to: "+srednia_14);
+
+            //16. 
+            Console.WriteLine();
+            var wynik_15 = (from User user in users
+                            orderby user.CreatedAt.Month
+                            group user by user.CreatedAt.Month);
+            var wynik_16 = users.GroupBy(user => user.CreatedAt.Month).OrderByDescending(user => -user.Key);
+            Console.WriteLine("Zadanie 16");
+            foreach (var wynikZad16 in wynik_15)
+            {
+                Console.WriteLine(wynikZad16.Key.ToString());
+                foreach (var user in wynikZad16)
+                {
+                    Console.WriteLine(user.Name);
+                }
+            }
+            Console.WriteLine();
+            foreach (var wynikZad16 in wynik_16)
+            {
+                Console.WriteLine(wynikZad16.Key.ToString());
+                foreach (var user in wynikZad16)
+                {
+                    Console.WriteLine(user.Name);
+                }
+            }
+
+            //17. 
+            Console.WriteLine();
+            var wynik_17 = (from user in users
+                            where user.RemovedAt == null
+                            select user).ToList();
+            var wynik_18 = users.Where(user => user.RemovedAt == null).Select(user => user).ToList();
+            Console.WriteLine("Zadanie 17");
+            foreach (var user in wynik_17)
+                Console.WriteLine(user.Name);
+            Console.WriteLine();
+            foreach (var user in wynik_18)
+                Console.WriteLine(user.Name);
+
+            //18. 
+            Console.WriteLine();
+            var NajnowszyStudent_01 = (from user in users
+                                       orderby user.CreatedAt descending
+                                       select user).ToList();
+            var NajnowszyStudent_02 = users.OrderByDescending(user => user.CreatedAt).Select(user => user).ToList();
+            Console.WriteLine("Zadanie 18");
+            foreach (var user in NajnowszyStudent_01.Take(1))
+            {
+                Console.WriteLine("Najnowszy student to: "+user.Name);
+            }
+            foreach (var user in NajnowszyStudent_02.Take(1))
+            {
+                Console.WriteLine("Najnowszy student to: " + user.Name);
+            }
 }
 public class User
 {
