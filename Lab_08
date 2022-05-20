@@ -32,3 +32,8 @@ namespace ConsoleApp4
 		}
 	}
 }
+}
+//Podpunkt 2
+//Thread.Sleep(1000) zatrzymuje bieżący wątek przez 1000 milisekund= 1 sekundę
+//Thread Join() sprawia, że blokujemy wątek do zakończenia wątku powiązanego przez dane wystąpienie
+//Podpunkt 3
