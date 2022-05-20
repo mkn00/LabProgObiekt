@@ -1,1 +1,34 @@
+//Podpunkt 2
+using System;
+using System.Threading;
 
+namespace ConsoleApp4
+{
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+
+			Thread thread1 = new Thread(new ThreadStart(Method1));
+			Thread thread2 = new Thread(new ThreadStart(Method2));
+			thread1.Start();
+			thread2.Start();
+		}
+		static void Method1()
+		{
+			for (int i = 1; i <= 5; ++i)
+			{
+				Console.WriteLine("Iteration: " + i);
+				Thread.Sleep(1000); // sleeps created thread for 1 second
+			}
+		}
+				static void Method2()
+            {
+			for (int n = 1; n <= 5; ++n)
+			{
+				Console.WriteLine("It: " + n);
+				Thread.Sleep(1000); // sleeps created thread for 1 second
+			}
+		}
+	}
+}
