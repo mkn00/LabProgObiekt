@@ -36,4 +36,51 @@ namespace ConsoleApp4
 //Podpunkt 2
 //Thread.Sleep(1000) zatrzymuje bieżący wątek przez 1000 milisekund= 1 sekundę
 //Thread Join() sprawia, że blokujemy wątek do zakończenia wątku powiązanego przez dane wystąpienie
-//Podpunkt 3
+//Podpunkt 4
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Task task = DoTasks();
+
+        task.Wait();
+    }
+
+    private static async Task DoTasks()
+    {
+        int num, i, ctr, stno, enno;
+        
+        Console.Write("\n\n");
+        Console.Write("Znajdowanie liczb pierwszych w zakresie:\n");
+        Console.Write("---------------------------------------------------");
+        Console.Write("\n\n");
+
+        Console.Write("Wpisz początkową liczbę zakresu : ");
+        stno = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Wpisz ostatnią liczbę zakresu : ");
+        enno = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Liczby pierwsze pomiędzy {0} i {1} to : \n", stno, enno);
+        await Task.Delay(10000);
+        for (num = stno; num <= enno; num++)
+        {
+            ctr = 0;
+
+            for (i = 2; i <= num / 2; i++)
+            {
+                if (num % i == 0)
+                {
+                    ctr++;
+                    break;
+                }
+            }
+
+            if (ctr == 0 && num != 1)
+                Console.Write("{0} ", num);
+            
+        }
+        Console.Write("\n");
+    }
+}
