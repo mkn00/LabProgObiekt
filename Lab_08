@@ -19,7 +19,7 @@ namespace ConsoleApp4
 			for (int i = 1; i <= 5; ++i)
 			{
 				Console.WriteLine("Iteration: " + i);
-				Thread.Sleep(1000); // sleeps created thread for 1 second
+				Thread.Sleep(1000); 
 			}
 		}
 				static void Method2()
@@ -27,7 +27,7 @@ namespace ConsoleApp4
 			for (int n = 1; n <= 5; ++n)
 			{
 				Console.WriteLine("It: " + n);
-				Thread.Sleep(1000); // sleeps created thread for 1 second
+				Thread.Sleep(1000);
 			}
 		}
 	}
