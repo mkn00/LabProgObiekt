@@ -84,3 +84,48 @@ public class Program
         Console.Write("\n");
     }
 }
+//Podpunkt 3
+using System;
+namespace ConsoleApp14
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Method1();
+            Method2();
+            Method3();
+            Method4();
+            Console.Read();
+        }
+        static void Method1()
+        {
+            for (int i = 1; i <= 5; i++)
+            {
+                Console.WriteLine("Method1 :" + i);
+            }
+        }
+
+        static void Method2()
+        {
+            for (int i = 1; i <= 5; i++)
+            {
+                Console.WriteLine("Method2 :" + i);
+            }
+        }
+        static void Method3()
+        {
+            for (int i = 1; i <= 5; i++)
+            {
+                Console.WriteLine("Method3 :" + i);
+            }
+        }
+        static void Method4()
+        {
+            for (int i = 1; i <= 5; i++)
+            {
+                Console.WriteLine("Method4 :" + i);
+            }
+        }
+    }
+}
