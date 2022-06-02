@@ -1,81 +1,25 @@
 using System;
 
-namespace lab3
+namespace lab_3
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine(Ex1(1));
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+            //ILogger[] loggers = new ILogger[]
+            //{
+            //    new ConsoleLogger(),
+            //    new FileLogger("log.txt"),
+            //    new SocketLogger("google.com", 80)
+            //};
 
-            Item a = new Item(1, 2);
-            Item b = new Item(2, 1);
-            Item c = new Item(3, 1);
-            Item d = new Item(4, 2);
-            Item e = new Item(5, 4);
-            Item f = new Item(5, 4);
-            Item g = new Item(2, 1);
-            Item[] items = { a, b, c, d, e, f, g };
-
-            Console.WriteLine(Ex2(items));
+            //using (ILogger logger = new CommonLogger(loggers))
+            //{
+            //    logger.Log("Example message 1 ...");
+            //    logger.Log("Example message 2 ...");
+            //    logger.Log("Example message 3 ...", "value 1", "value 2", "value 3");
+            //}
         }
-
-        static ulong Ex1(ulong n)
-        {
-            ulong n1 = 1;
-            ulong n2 = 1;
-            ulong c = 1;
-            for (ulong i = 2; i < n; i++)
-            {
-                c = n1 + n2;
-                n1 = n2;
-                n2 = c;
-            }
-            return c;
-        }
-
-        static int Ex2(Item[] Items)
-        {
-            Item[] kufer = new Item[Items.Length];
-            int kuferValue = 0;
-            int kuferSize = 10;
-            int itemCounter = 0;
-            int[] itemsInside = new int[kuferSize];
-            float average = 0;
-            for (int i = 0; i < Items.Length; i++)
-            {
-                average += ((float)Items[i].c / (float)Items[i].size);
-            }
-            average /= Items.Length;
-            while (kuferSize > 0)
-            {
-                for (int i = 0; i < Items.Length; i++)
-                {
-                    if (kuferSize > Items[i].size)
-                    {
-                        kuferValue += Items[i].c;
-                        kuferSize -= Items[i].size;
-                        kufer[itemCounter] = Items[i];
-                        itemCounter++;
-                        Console.WriteLine($"Dodajemy item o wartości {Items[i].c} oraz zajmujacy {Items[i].size}");
-                    }
-                }
-            }
-
-            return kuferValue;
-        }
-    }
-
-    class Item
-    {
-
-        public int c { get; set; }
-        public int size { get; set; }
-
-        public Item(int c, int size)
-        {
-            this.c = c;
-            this.size = size;
-        }
-    }
+	}
 }
+
