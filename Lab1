@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+
+namespace lab1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+        static int Zad1(int[] array)
+        {
+            int index = -1;
+            int min = int.MaxValue;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] / 10 >= 1 && array[i] / 10 < 10 && min >= array[i])
+                {
+                    min = array[i];
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        static int Zad2(int[] tab, int k)
+        {
+            if (k < 0) throw new ArgumentOutOfRangeException();
+            int sum = 0;
+            float average = 0.0f;
+            for (int i = 0; i < tab.Length; i++) sum += tab[i];
+            average = (float)sum / tab.Length;
+            sum = 0;
+            int zeros = (int)(Math.Pow(10, k - 1));
+            for (int i = 0; i < tab.Length; i++)
+            {
+                if (tab[i] < average && Math.Abs(tab[i] / zeros) >= 1 && tab[i] / zeros < 10)
+                {
+                    sum += tab[i];
+                }
+            }
+            return sum;
+        }
+
+
+        static uint Zad3(uint[] tab, int k)
+        {
+            for (int i = 0; i < tab.Length; i++) if (tab[i] > 10000) throw new ArgumentOutOfRangeException();
+            for (int i = 0; i < tab.Length - 1; i++)
+            {
+                for (int j = 0; j < tab.Length - 1; j++)
+                {
+                    if (tab[j] > tab[j + 1])
+                    {
+                        uint sort = tab[j];
+                        tab[j] = tab[j + 1];
+                        tab[j + 1] = sort;
+                    }
+                }
+            }
+            List<uint> withoutDuplicates = new List<uint>();
+            for (int i = 1; i < tab.Length; i++) if (tab[i] != tab[i - 1]) withoutDuplicates.Add(tab[i - 1]);
+            withoutDuplicates.Add(tab[tab.Length - 1]);
+            return withoutDuplicates[(k - 1)];
+        }
+    }
+}
