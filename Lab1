@@ -1,68 +1,172 @@
 using System;
-using System.Collections.Generic;
 
-namespace lab1
+namespace lab_1
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
         }
-        static int Zad1(int[] array)
+    }
+
+    public class Ulamek : IComparable<Ulamek>, IEquatable<Ulamek>
+    {
+        public int Licznik { get; }
+        public int Mianownik { get; }
+
+        public Ulamek()
         {
-            int index = -1;
-            int min = int.MaxValue;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] / 10 >= 1 && array[i] / 10 < 10 && min >= array[i])
-                {
-                    min = array[i];
-                    index = i;
-                }
-            }
-            return index;
+            this.Licznik = 1;
+            this.Mianownik = 1;
         }
 
-        static int Zad2(int[] tab, int k)
+        public Ulamek(int licznik, int mianownik)
         {
-            if (k < 0) throw new ArgumentOutOfRangeException();
-            int sum = 0;
-            float average = 0.0f;
-            for (int i = 0; i < tab.Length; i++) sum += tab[i];
-            average = (float)sum / tab.Length;
-            sum = 0;
-            int zeros = (int)(Math.Pow(10, k - 1));
-            for (int i = 0; i < tab.Length; i++)
-            {
-                if (tab[i] < average && Math.Abs(tab[i] / zeros) >= 1 && tab[i] / zeros < 10)
-                {
-                    sum += tab[i];
-                }
-            }
-            return sum;
+            this.Mianownik = mianownik;
+            this.Licznik = licznik;
         }
 
-
-        static uint Zad3(uint[] tab, int k)
+        public Ulamek(Ulamek ulamek)
         {
-            for (int i = 0; i < tab.Length; i++) if (tab[i] > 10000) throw new ArgumentOutOfRangeException();
-            for (int i = 0; i < tab.Length - 1; i++)
-            {
-                for (int j = 0; j < tab.Length - 1; j++)
-                {
-                    if (tab[j] > tab[j + 1])
-                    {
-                        uint sort = tab[j];
-                        tab[j] = tab[j + 1];
-                        tab[j + 1] = sort;
-                    }
-                }
+            this.Licznik = ulamek.Licznik;
+            this.Mianownik = ulamek.Mianownik;
+        }
+
+        public static Ulamek operator +(Ulamek a, Ulamek b)
+        {
+            int m = a.Mianownik * b.Mianownik;
+            int l = a.Licznik * b.Mianownik + b.Licznik * a.Mianownik;
+            return new Ulamek(l, m).Shrink();
+        }
+
+        public static Ulamek operator +(Ulamek a, int b)
+        {
+            int m = a.Mianownik;
+            int l = a.Licznik + a.Mianownik * b;
+            return new Ulamek(l, m).Shrink();
+        }
+
+        public static Ulamek operator -(Ulamek a, Ulamek b)
+        {
+            return new Ulamek(a.Licznik * b.Mianownik - b.Licznik * a.Mianownik, a.Mianownik * b.Mianownik).Shrink();
+        }
+
+        public static Ulamek operator *(Ulamek a, Ulamek b)
+        {
+            return new Ulamek(a.Licznik * b.Licznik, a.Mianownik * b.Mianownik).Shrink();
+        }
+
+        public static Ulamek operator /(Ulamek a, Ulamek b)
+        {
+            return new Ulamek(a.Mianownik * b.Mianownik, a.Licznik * b.Licznik).Shrink();
+        }
+
+        public static bool operator ==(Ulamek a, Ulamek b)
+        {
+            if (a is null || b is null) return false;
+            int m = a.Mianownik * b.Licznik;
+            int l = a.Licznik * b.Mianownik;
+            if (m == l) return true;
+            else return false;
+        }
+
+        public static bool operator !=(Ulamek a, Ulamek b)
+        {
+            return a == b;
+        }
+
+        public static bool operator <(Ulamek a, Ulamek b)
+        {
+            int bl = a.Mianownik * b.Licznik;
+            int al = a.Licznik * b.Mianownik;
+            if (a == b) return false;
+            if (al < bl) return true;
+            else return false;
+        }
+
+        public static bool operator >(Ulamek a, Ulamek b)
+        {
+            if (a == b) return false;
+            else return a < b;
+        }
+
+        public static bool operator >=(Ulamek a, Ulamek b)
+        {
+            if (a == b || a > b) return true;
+            else return false;
+        }
+
+        public static bool operator <=(Ulamek a, Ulamek b)
+        {
+            if (a == b || a < b) return true;
+            else return false;
+        }
+        public override string ToString()
+        {
+            if (this.Mianownik == this.Licznik) return "1";
+            else if (Mianownik == 1) return this.Licznik.ToString();
+            else if (Mianownik == 0 || Licznik == 0) return "0";
+            else return Licznik.ToString() + " / " + Mianownik.ToString();
+        }
+        
+        public float ToFloat()
+        {
+            if (Mianownik == 0 || Licznik == 0) return 0.0f;
+            return (float)this.Licznik / (float)this.Mianownik;
+        }
+       
+        public Ulamek Shrink()
+        {
+            int t;
+            int a = this.Mianownik;
+            int b = this.Licznik;
+            while (b != 0)
+			{
+                t = b;
+                b = a % b;
+                a = t;
             }
-            List<uint> withoutDuplicates = new List<uint>();
-            for (int i = 1; i < tab.Length; i++) if (tab[i] != tab[i - 1]) withoutDuplicates.Add(tab[i - 1]);
-            withoutDuplicates.Add(tab[tab.Length - 1]);
-            return withoutDuplicates[(k - 1)];
+            b = this.Licznik / a;
+            a = this.Mianownik / a;
+            return new Ulamek(b, a);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Licznik, Mianownik);
+        }
+
+        public bool Equals(Ulamek other)
+        {
+            return this == other;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (!(obj is Ulamek || obj is int)) return false;
+
+            Ulamek x;
+
+            if (obj is Ulamek) x = obj as Ulamek;
+            else x = new Ulamek((int)obj, 1);
+            
+            return x == this;
+        }
+
+        public int CompareTo(Ulamek other)
+        {
+            if (other == null) return -1;
+            if (other == this) return 0;
+
+            float diff = (this - other).ToFloat();
+
+            if (diff > 0) return +1;
+            if (diff < 0) return -1;
+
+            return 0;
         }
     }
 }
+
