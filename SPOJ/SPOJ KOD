@@ -1,0 +1,1618 @@
+// Zadanie ADAUSORT
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AdaSort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var sb = new StringBuilder();
+            var n = int.Parse(Console.ReadLine());
+            var input = Console.ReadLine().Split(' ');
+            var arr = new int[n];
+            for (var i = 0; i < n; i++)
+                arr[i] = int.Parse(input[i]);
+            
+            var queue = new Stack<int>[arr.Max()];
+
+            for (var i = 0; i < arr.Length; i++)
+            {
+                if(queue[arr[i]-1] == null)
+                    queue[arr[i]-1] = new Stack<int>();
+                queue[arr[i]-1].Push(i + 1);
+            }
+
+            for (var i = 0; i < queue.Length; i++)
+            {
+                if(queue[i] != null)
+                    while(queue[i].Count > 0)
+                        sb.Append(queue[i].Pop() + " ");
+            }
+            Console.WriteLine(sb.ToString());
+        }
+    }
+}
+// Zadanie ARITH2
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+
+public static class ARITH2
+{
+    public static long Solve(string expression)
+    {
+        string[] spacelessSubexpressions = expression.Split(
+            default(char[]), StringSplitOptions.RemoveEmptyEntries);
+        string[] tokens = spacelessSubexpressions
+            .SelectMany(s => s.SplitAndKeep(new[] { '+', '-', '*', '/', '=' }))
+            .ToArray();
+
+      
+        long result = long.Parse(tokens[0]);
+        for (int i = 1; i < tokens.Length - 2; ++i)
+        {
+            char @operator = tokens[i][0];
+            long value = long.Parse(tokens[++i]);
+
+            switch (@operator)
+            {
+                case '+': result += value; break;
+                case '-': result -= value; break;
+                case '*': result *= value; break;
+                case '/': result /= value; break;
+            }
+        }
+
+        return result;
+    }
+}
+
+public static class StringHelper
+{
+ 
+    public static IEnumerable<string> SplitAndKeep(this string s, char[] delimiters)
+    {
+        int nextSubstringStartIndex = 0;
+        while (nextSubstringStartIndex < s.Length)
+        {
+            int nextDelimiterIndex = s.IndexOfAny(delimiters, nextSubstringStartIndex);
+
+            if (nextDelimiterIndex == nextSubstringStartIndex)
+            {
+                yield return s[nextSubstringStartIndex].ToString();
+                ++nextSubstringStartIndex;
+            }
+            else if (nextDelimiterIndex > nextSubstringStartIndex)
+            {
+                yield return s.Substring(nextSubstringStartIndex,
+                    length: nextDelimiterIndex - nextSubstringStartIndex);
+                nextSubstringStartIndex = nextDelimiterIndex;
+            }
+            else 
+            {
+                yield return s.Substring(nextSubstringStartIndex);
+                nextSubstringStartIndex = s.Length;
+            }
+        }
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            Console.ReadLine();
+
+            Console.WriteLine(
+                ARITH2.Solve(Console.ReadLine()));
+        }
+    }
+}
+// Zadanie ARMY
+using System;
+using System.Linq;
+
+public static class ARMY
+{
+   
+    public static string Solve(
+        int[] strengthsOfGodzillasArmy, int[] strengthsOfMechaGodzillasArmy)
+        => strengthsOfGodzillasArmy.Max()
+        >= strengthsOfMechaGodzillasArmy.Max()
+        ? "Godzilla" : "MechaGodzilla";
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            Console.ReadLine();
+            Console.ReadLine();
+
+            int[] strengthsOfGodzillasArmy = Array.ConvertAll(
+                Console.ReadLine().Split(), int.Parse);
+            int[] strengthsOfMechaGodzillasArmy = Array.ConvertAll(
+                Console.ReadLine().Split(), int.Parse);
+
+            Console.WriteLine(
+                ARMY.Solve(strengthsOfGodzillasArmy, strengthsOfMechaGodzillasArmy));
+        }
+    }
+}
+// Zadanie ATOMS
+using System;
+
+public static class ATOMS
+{
+   
+    public static long Solve(long n, long k, long m)
+    {
+        if (n >= m)
+            return 0;
+
+     
+        return (long)Math.Log(m / (double)n, k);
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            long[] line = Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
+
+            Console.WriteLine(
+                ATOMS.Solve(line[0], line[1], line[2]));
+        }
+    }
+}
+// Zadanie COINS
+using System;
+using System.Collections.Generic;
+
+
+public static class COINS
+{
+    private const int _cachedLimit = 15258; 
+
+  
+    private static readonly IReadOnlyList<long> _exchangeValues;
+
+    static COINS()
+    {
+        long[] exchangeValues = new long[_cachedLimit + 1];
+        exchangeValues[0] = 0;
+
+        for (int n = 1; n <= _cachedLimit; ++n)
+        {
+            exchangeValues[n] = Math.Max(n,
+                exchangeValues[n / 2] + exchangeValues[n / 3] + exchangeValues[n / 4]);
+        }
+
+        _exchangeValues = exchangeValues;
+    }
+
+    public static long Solve(int n)
+    {
+        if (n <= _cachedLimit)
+            return _exchangeValues[n];
+
+        return Math.Max(n, Solve(n / 2) + Solve(n / 3) + Solve(n / 4));
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        string line;
+        while ((line = Console.ReadLine()) != null)
+        {
+            Console.WriteLine(
+                COINS.Solve(int.Parse(line)));
+        }
+    }
+}
+// Zadanie HACKRNDM
+using System;
+
+
+public static class HACKRNDM 
+{
+    
+    public static int Solve(int difference, int[] numbers)
+    {
+        Array.Sort(numbers);
+
+        int count = 0;
+        int bigIndex = numbers.Length - 1;
+        int smallIndex = numbers.Length - 1;
+        while (smallIndex >= 0)
+        {
+            int bigNumber = numbers[bigIndex];
+            int smallNumber = numbers[smallIndex];
+
+            if (bigNumber - smallNumber < difference)
+            {
+                --smallIndex;
+            }
+            else if (bigNumber - smallNumber == difference)
+            {
+                ++count;
+                --smallIndex;
+                --bigIndex;
+            }
+            else // bigNumber - smallNumber > difference
+            {
+                --bigIndex;
+            }
+        }
+
+        return count;
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        string[] line = Console.ReadLine().Split();
+        int numberCount = int.Parse(line[0]);
+        int difference = int.Parse(line[1]);
+
+        int[] numbers = new int[numberCount];
+        for (int i = 0; i < numberCount; ++i)
+        {
+            numbers[i] = int.Parse(Console.ReadLine());
+        }
+
+        Console.Write(HACKRNDM.Solve(difference, numbers));
+    }
+}
+// Zadanie HORRIBLE
+using System;
+using System.Text;
+
+
+public sealed class HORRIBLE 
+{
+    private readonly LazySumSegmentTree _segmentTree;
+
+    public HORRIBLE(int arrayLength)
+    {
+        _segmentTree = new LazySumSegmentTree(arrayLength);
+    }
+
+    public void Update(int updateStartIndex, int updateEndIndex, int rangeAddition)
+        => _segmentTree.Update(updateStartIndex, updateEndIndex, rangeAddition);
+
+    public long Query(int queryStartIndex, int queryEndIndex)
+        => _segmentTree.Query(queryStartIndex, queryEndIndex);
+}
+
+public sealed class LazySumSegmentTree
+{
+    private readonly SumQueryObject[] _treeArray;
+
+    public LazySumSegmentTree(int arrayLength)
+    {
+        _treeArray = new SumQueryObject[2 * MathHelper.FirstPowerOfTwoEqualOrGreater(arrayLength) - 1];
+        Build(0, 0, arrayLength - 1);
+    }
+
+    private void Build(int treeArrayIndex, int segmentStartIndex, int segmentEndIndex)
+    {
+        if (segmentStartIndex == segmentEndIndex)
+        {
+            _treeArray[treeArrayIndex] = new SumQueryObject(segmentStartIndex, 0);
+            return;
+        }
+
+        int leftChildTreeArrayIndex = 2 * treeArrayIndex + 1;
+        int rightChildTreeArrayIndex = leftChildTreeArrayIndex + 1;
+        int leftChildSegmentEndIndex = (segmentStartIndex + segmentEndIndex) / 2;
+
+        Build(leftChildTreeArrayIndex, segmentStartIndex, leftChildSegmentEndIndex);
+        Build(rightChildTreeArrayIndex, leftChildSegmentEndIndex + 1, segmentEndIndex);
+
+        _treeArray[treeArrayIndex] = _treeArray[leftChildTreeArrayIndex].Combine(_treeArray[rightChildTreeArrayIndex]);
+    }
+
+    public long Query(int queryStartIndex, int queryEndIndex)
+        => Query(0, queryStartIndex, queryEndIndex).Sum;
+
+   
+    private SumQueryObject Query(int treeArrayIndex, int queryStartIndex, int queryEndIndex)
+    {
+        var parentQueryObject = _treeArray[treeArrayIndex];
+
+        if (parentQueryObject.IsTotallyOverlappedBy(queryStartIndex, queryEndIndex))
+            return parentQueryObject;
+
+        bool leftHalfOverlaps = parentQueryObject.DoesLeftHalfOverlapWith(queryStartIndex, queryEndIndex);
+        bool rightHalfOverlaps = parentQueryObject.DoesRightHalfOverlapWith(queryStartIndex, queryEndIndex);
+        int leftChildTreeArrayIndex = 2 * treeArrayIndex + 1;
+        int rightChildTreeArrayIndex = leftChildTreeArrayIndex + 1;
+        SumQueryObject childrenQueryObject;
+
+        if (leftHalfOverlaps && rightHalfOverlaps)
+        {
+            childrenQueryObject = Query(leftChildTreeArrayIndex, queryStartIndex, queryEndIndex)
+                .Combine(Query(rightChildTreeArrayIndex, queryStartIndex, queryEndIndex));
+        }
+        else if (leftHalfOverlaps)
+        {
+            childrenQueryObject = Query(leftChildTreeArrayIndex, queryStartIndex, queryEndIndex);
+        }
+        else
+        {
+            childrenQueryObject = Query(rightChildTreeArrayIndex, queryStartIndex, queryEndIndex);
+        }
+
+        return new SumQueryObject(
+            childrenQueryObject.SegmentStartIndex,
+            childrenQueryObject.SegmentEndIndex,
+            childrenQueryObject.Sum)
+        {
+            RangeAddition = parentQueryObject.RangeAddition
+        };
+    }
+
+    public void Update(int updateIndex, long rangeAddition)
+        => Update(updateIndex, updateIndex, rangeAddition);
+
+    public void Update(int updateStartIndex, int updateEndIndex, long rangeAddition)
+        => Update(0, updateStartIndex, updateEndIndex, rangeAddition);
+
+    private void Update(int treeArrayIndex, int updateStartIndex, int updateEndIndex, long rangeAddition)
+    {
+        var queryObject = _treeArray[treeArrayIndex];
+
+        if (queryObject.IsTotallyOverlappedBy(updateStartIndex, updateEndIndex))
+        {
+            queryObject.Update(rangeAddition);
+            return;
+        }
+
+        int leftChildTreeArrayIndex = 2 * treeArrayIndex + 1;
+        int rightChildTreeArrayIndex = leftChildTreeArrayIndex + 1;
+
+        if (queryObject.DoesLeftHalfOverlapWith(updateStartIndex, updateEndIndex))
+        {
+            Update(leftChildTreeArrayIndex, updateStartIndex, updateEndIndex, rangeAddition);
+        }
+
+        if (queryObject.DoesRightHalfOverlapWith(updateStartIndex, updateEndIndex))
+        {
+            Update(rightChildTreeArrayIndex, updateStartIndex, updateEndIndex, rangeAddition);
+        }
+
+        queryObject.Update(_treeArray[leftChildTreeArrayIndex], _treeArray[rightChildTreeArrayIndex]);
+    }
+
+    private sealed class SumQueryObject
+    {
+        public long Sum
+            => SumWithoutRangeAddition + RangeAddition * SegmentLength;
+
+        private long SumWithoutRangeAddition { get; set; }
+        public long RangeAddition { get; set; }
+
+        public int SegmentStartIndex { get; }
+        public int SegmentEndIndex { get; }
+        public int SegmentLength => SegmentEndIndex - SegmentStartIndex + 1;
+
+        public SumQueryObject(int index, long value)
+        {
+            SegmentStartIndex = index;
+            SegmentEndIndex = index;
+            SumWithoutRangeAddition = value;
+        }
+
+        public SumQueryObject(int segmentStartIndex, int segmentEndIndex, long sumWithoutRangeAddition)
+        {
+            SegmentStartIndex = segmentStartIndex;
+            SegmentEndIndex = segmentEndIndex;
+            SumWithoutRangeAddition = sumWithoutRangeAddition;
+        }
+
+        public SumQueryObject Combine(SumQueryObject rightAdjacentObject)
+            => new SumQueryObject(
+                segmentStartIndex: SegmentStartIndex,
+                segmentEndIndex: rightAdjacentObject.SegmentEndIndex,
+                sumWithoutRangeAddition: Sum + rightAdjacentObject.Sum);
+
+        public void Update(long rangeAddition)
+            => RangeAddition += rangeAddition;
+
+        public void Update(SumQueryObject updatedLeftChild, SumQueryObject updatedRightChild)
+            => SumWithoutRangeAddition = updatedLeftChild.Sum + updatedRightChild.Sum;
+
+        public bool IsTotallyOverlappedBy(int startIndex, int endIndex)
+            => startIndex <= SegmentStartIndex && endIndex >= SegmentEndIndex;
+
+        public bool DoesLeftHalfOverlapWith(int startIndex, int endIndex)
+            => startIndex <= (SegmentStartIndex + SegmentEndIndex) / 2;
+
+        public bool DoesRightHalfOverlapWith(int startIndex, int endIndex)
+            => endIndex > (SegmentStartIndex + SegmentEndIndex) / 2;
+    }
+}
+
+public static class MathHelper
+{
+    public static int FirstPowerOfTwoEqualOrGreater(int value)
+    {
+        int result = 1;
+        while (result < value)
+        {
+            result <<= 1;
+        }
+
+        return result;
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        var output = new StringBuilder();
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            int[] line = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+
+            int arrayLength = line[0];
+            var solver = new HORRIBLE(arrayLength);
+
+            int commandCount = line[1];
+            for (int c = 0; c < commandCount; ++c)
+            {
+                int[] command = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+
+                if (command[0] == 0)
+                {
+                    solver.Update(
+                        updateStartIndex: command[1] - 1,
+                        updateEndIndex: command[2] - 1,
+                        rangeAddition: command[3]);
+                }
+                else
+                {
+                    output.Append(solver.Query(
+                        queryStartIndex: command[1] - 1,
+                        queryEndIndex: command[2] - 1));
+                    output.AppendLine();
+                }
+            }
+        }
+
+        Console.Write(output);
+    }
+}
+// Zadanie LENGFACT
+using System;
+
+
+public static class LENGFACT
+{
+    
+    public static long Solve(long n)
+        => n < 2 ? 1
+        : (long)Math.Ceiling(Math.Log10(2 * Math.PI * n) / 2 + n * Math.Log10(n / Math.E));
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            long n = long.Parse(Console.ReadLine());
+
+            Console.WriteLine(
+                LENGFACT.Solve(n));
+        }
+    }
+}
+// Zadanie NHAY
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+public static class NHAY
+{
+    public static IEnumerable<int> Solve(string text, string pattern)
+        => KmpStringMatcher.GetMatchIndices(text, pattern);
+}
+
+
+public static class KmpStringMatcher
+{
+    public static IEnumerable<int> GetMatchIndices(string text, string pattern)
+    {
+        IReadOnlyList<int> prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix =
+            ComputePrefixesLengthOfLongestProperSuffixThatIsItselfAPrefix(pattern);
+        int matchedCharactersCount = 0;
+
+        for (int i = 1; i <= text.Length; ++i)
+        {
+            while (matchedCharactersCount > 0 && pattern[(matchedCharactersCount + 1) - 1] != text[(i) - 1])
+            {
+                matchedCharactersCount = prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix[matchedCharactersCount];
+            }
+
+            if (pattern[(matchedCharactersCount + 1) - 1] == text[(i) - 1])
+            {
+                ++matchedCharactersCount;
+            }
+
+            if (matchedCharactersCount == pattern.Length)
+            {
+                yield return i - pattern.Length;
+
+                matchedCharactersCount = prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix[matchedCharactersCount];
+            }
+        }
+    }
+
+    public static IReadOnlyList<int> ComputePrefixesLengthOfLongestProperSuffixThatIsItselfAPrefix(string pattern)
+    {
+        int[] prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix = new int[pattern.Length + 1];
+        int lengthOfLongestProperSuffixThatIsItselfAPrefix = prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix[1] = 0;
+
+        for (int i = 2; i <= pattern.Length; ++i)
+        {
+            while (lengthOfLongestProperSuffixThatIsItselfAPrefix > 0
+                && pattern[(lengthOfLongestProperSuffixThatIsItselfAPrefix + 1) - 1] != pattern[(i) - 1])
+            {
+                lengthOfLongestProperSuffixThatIsItselfAPrefix =
+                    prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix[lengthOfLongestProperSuffixThatIsItselfAPrefix];
+            }
+
+            if (pattern[(lengthOfLongestProperSuffixThatIsItselfAPrefix + 1) - 1] == pattern[(i) - 1])
+            {
+                ++lengthOfLongestProperSuffixThatIsItselfAPrefix;
+            }
+
+            prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix[i] = lengthOfLongestProperSuffixThatIsItselfAPrefix;
+        }
+
+        return Array.AsReadOnly(prefixesLengthOfLongestProperSuffixThatIsItselfAPrefix);
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        var output = new StringBuilder();
+        int patternLength;
+        while (int.TryParse(Console.ReadLine(), out patternLength))
+        {
+            string pattern = Console.ReadLine();
+            string text = Console.ReadLine();
+
+            int outputLengthBefore = output.Length;
+            foreach (int matchIndex in NHAY.Solve(text, pattern))
+            {
+                output.Append(matchIndex);
+                output.AppendLine();
+            }
+
+            if (output.Length == outputLengthBefore)
+            {
+                output.AppendLine(); 
+            }
+        }
+
+        Console.Write(output);
+    }
+}
+// Zadanie PHONELST
+using System;
+using System.Collections.Generic;
+
+
+public static class PHONELST
+{
+    
+    public static bool Solve(int phoneNumberCount, string[] phoneNumbers)
+    {
+        var trie = new Trie();
+        for (int i = 0; i < phoneNumberCount; ++i)
+        {
+            if (trie.Add(phoneNumbers[i]))
+                return false; 
+        }
+
+        return true; .
+    }
+}
+
+
+public sealed class Trie
+{
+    private Node _root = new Node((char)0);
+
+   
+    public bool Add(string word)
+    {
+        bool isPrefixedByAWord = false;
+        bool isPrefixOfAWord = false;
+
+        Node currentNode = _root;
+        Node nextNode;
+        int index = 0;
+
+        
+        while (index < word.Length && currentNode.Children.TryGetValue(word[index], out nextNode))
+        {
+            currentNode = nextNode;
+            ++index;
+
+            if (currentNode.IsAWordEnd)
+            {
+               
+                isPrefixedByAWord = true;
+            }
+        }
+
+        if (index == word.Length)
+        {
+            if (currentNode.Children.Count != 0)
+            {
+               
+                isPrefixOfAWord = true;
+            }
+        }
+        else
+        {
+            
+            while (index < word.Length)
+            {
+                nextNode = new Node(word[index]);
+                currentNode.Children.Add(word[index], nextNode);
+                currentNode = nextNode;
+                ++index;
+            }
+        }
+
+       
+        currentNode.IsAWordEnd = true;
+
+        return isPrefixedByAWord || isPrefixOfAWord;
+    }
+
+    private sealed class Node
+    {
+        public Node(char value)
+        {
+            Value = value;
+        }
+
+       
+        public char Value { get; }
+        public bool IsAWordEnd { get; set; }
+        public Dictionary<char, Node> Children { get; } = new Dictionary<char, Node>();
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        string[] phoneNumbers = new string[10000];
+        int remainingTestCases = int.Parse(Console.ReadLine());
+        while (remainingTestCases-- > 0)
+        {
+            int phoneNumberCount = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < phoneNumberCount; ++i)
+            {
+                phoneNumbers[i] = Console.ReadLine();
+            }
+
+            Console.WriteLine(
+                PHONELST.Solve(phoneNumberCount, phoneNumbers) ? "YES" : "NO");
+        }
+    }
+}
+// Zadanie SBANK
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+public static class SBANK
+{
+  
+    public static void SolveTooSlowly(int accountCount, StringBuilder output)
+    {
+        var numberaccount = new SortedDictionary<string, int>();
+
+        while (accountCount-- > 0)
+        {
+            string account = Console.ReadLine();
+
+            int numberappearances;
+            if (numberaccount.TryGetValue(account, out numberappearances))
+            {
+                numberaccount[account] = numberappearances + 1;
+            }
+            else
+            {
+                numberaccount[account] = 1;
+            }
+        }
+        Console.ReadLine();
+
+        foreach (var numberIaccount in numberaccount)
+        {
+            output.AppendLine($"{numberIaccount.Key} {numberIaccount.Value}");
+        }
+        output.AppendLine();
+    }
+
+    public static void SolveFastEnough(int accountCount, StringBuilder output)
+    {
+        var sortaccounts = new SortedSet<string>();
+        var accountIcounts = new Dictionary<string, int>();
+
+        while (accountCount-- > 0)
+        {
+            string account = Console.ReadLine();
+
+            int occurrenceCount;
+            if (accountIcounts.TryGetValue(account, out occurrenceCount))
+            {
+                accountIcounts[account] = occurrenceCount + 1;
+            }
+            else
+            {
+                accountIcounts[account] = 1;
+                sortaccounts.Add(account);
+            }
+        }
+        Console.ReadLine();
+
+        foreach (var account in sortaccounts)
+        {
+            output.AppendLine($"{account} {accountIcounts[account]}");
+        }
+        output.AppendLine();
+    }
+    
+    public static void SolveEvenFaster(int accountCount, StringBuilder output)
+    {
+        string[] currentnacc = new string[accountCount];
+        string[] previusacc = new string[accountCount];
+        for (int a = 0; a < accountCount; ++a)
+        {
+            currentnacc[a] = Console.ReadLine();
+        }
+        Console.ReadLine();
+
+        for (int digit = 30; digit >= 0; --digit)
+        {
+            if (digit == 26 || digit == 21 || digit == 16 || digit == 11 || digit == 2)
+                continue; 
+            int[] characterCounts = new int['9' + 2];
+            
+            for (int a = 0; a < accountCount; ++a)
+            {
+                ++characterCounts[currentnacc[a][digit] + 1];
+            }
+            
+            for (int c = '0'; c <= '9'; ++c)
+            {
+                characterCounts[c + 1] += characterCounts[c];
+            }
+            
+            for (int a = 0; a < accountCount; ++a)
+            {
+                previusacc[characterCounts[currentnacc[a][digit]]++] = currentnacc[a];
+            }
+
+           
+            var accountsTemp = previusacc;
+            previusacc = currentnacc;
+            currentnacc = accountsTemp;
+        }
+
+       
+        string account = currentnacc[0];
+        int occurrenceCount = 1;
+        for (int a = 1; a < accountCount; ++a)
+        {
+            if (currentnacc[a] == account)
+            {
+                ++occurrenceCount;
+            }
+            else 
+            {
+                output.AppendLine($"{account} {occurrenceCount}");
+
+                account = currentnacc[a];
+                occurrenceCount = 1;
+            }
+        }
+        output.AppendLine($"{account} {occurrenceCount}");
+        output.AppendLine();
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        var output = new StringBuilder();
+        int testcalsses = int.Parse(Console.ReadLine());
+        while (testcalsses-- > 0)
+        {
+            SBANK.SolveEvenFaster(
+                accountCount: int.Parse(Console.ReadLine()),
+                output: output);
+        }
+
+        Console.Write(output);
+    }
+}
+// Zadanie ACODE. Zadanie przekroczyło limit czasowy
+using System;
+using System.Collections.Generic;
+
+
+public static class ACODE
+{
+    
+    private static readonly
+        IReadOnlyDictionary<string, long> _codedLetterDecodeCounts = new Dictionary<string, long>
+    {
+        { "1", 1 }, { "2", 1 }, { "3", 1 }, { "4", 1 }, { "5", 1 }, { "6", 1 }, { "7", 1 },
+        { "8", 1 }, { "9", 1 }, { "10", 1 }, { "11", 2 }, { "12", 2 }, { "13", 2 }, { "14", 2},
+        { "15", 2 }, { "16", 2 }, { "17", 2 }, { "18", 2 }, { "19", 2 }, { "20", 1 }, { "21", 2 },
+        { "22", 2 }, { "23", 2 }, { "24", 2 }, { "25", 2 }, { "26", 2 }
+    };
+
+ 
+    private static readonly
+        Dictionary<string, long> _numberDecodeCounts = new Dictionary<string, long>();
+
+    public static long Solve(string number)
+    {
+        _numberDecodeCounts.Clear();
+
+        return SolveRecursively(number);
+    }
+
+    private static long SolveRecursively(string number)
+    {
+        
+        if (IsNumberACodedLetter(number))
+            return CodedLetterDecodeCount(number);
+
+        long decodeCount;
+        if (_numberDecodeCounts.TryGetValue(number, out decodeCount))
+            return decodeCount;
+
+        bool firstDigitCanBeLetter = IsNumberACodedLetter(number.Substring(0, 1));
+        bool firstTwoDigitsCanBeLetter = number.Length >= 2
+            && IsNumberACodedLetter(number.Substring(0, 2));
+
+        if (firstDigitCanBeLetter)
+        {
+            string numberAfterFirstDigit = number.Substring(1);
+            decodeCount += Solve(numberAfterFirstDigit);
+        }
+
+        if (firstTwoDigitsCanBeLetter)
+        {
+            string numberAfterFirstTwoDigits = number.Substring(2);
+            decodeCount += Solve(numberAfterFirstTwoDigits);
+        }
+
+        _numberDecodeCounts.Add(number, decodeCount);
+
+        return decodeCount;
+    }
+
+    private static bool IsNumberACodedLetter(string number)
+        => _codedLetterDecodeCounts.ContainsKey(number);
+
+    private static long CodedLetterDecodeCount(string codedLetter)
+        => _codedLetterDecodeCounts[codedLetter];
+}
+
+public static class Program
+
+{
+    private static void Main()
+    {
+        string number;
+        while ((number = Console.ReadLine()) != "0")
+        {
+            Console.WriteLine(
+                ACODE.Solve(number));
+        }
+    }
+}
+// Zadanie CUBERFR. Błąd kompilacji
+using System;
+using System.Text;
+
+
+public static class CUBEFR
+{
+    private const int _limit = 1000000;
+    private const int _cubedRootOfLimit = 100;
+    private static readonly int[] _sieve = new int[_limit + 1];
+
+    static CUBEFR()
+    {
+        int cubeFreeIndex = 1;
+        _sieve[1] = cubeFreeIndex;
+
+        for (int n = 2; n <= _limit; ++n)
+        {
+            
+            if (_sieve[n] == 0)
+            {
+                _sieve[n] = ++cubeFreeIndex;
+
+
+                if (n <= _cubedRootOfLimit)
+                {
+                    int nCubed = n * n * n;
+
+                    for (int m = nCubed; m <= _limit; m += nCubed)
+                    {
+                        _sieve[m] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    public static int Solve(int n)
+        => _sieve[n];
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        var output = new StringBuilder();
+        int testCount = int.Parse(Console.ReadLine());
+        for (int t = 1; t <= testCount; ++t)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int result = CUBEFR.Solve(n);
+
+            if (result != -1)
+            {
+                output.Append($"Case {t}: {result}");
+            }
+            else
+            {
+                output.Append($"Case {t}: Not Cube Free");
+            }
+
+            output.AppendLine();
+        }
+
+        Console.Write(output);
+    }
+}
+}
+// Zadanie SHPATH. Przekroczony limit czasu
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+
+public static class SHPATH
+{
+    
+    public static int Solve(List<KeyValuePair<int, int>>[] cityGraph, int sourceCity, int destinationCity)
+    {
+        var pathCosts = new BinaryHeap(sourceCity);
+        bool[] visitedCities = new bool[cityGraph.Length];
+
+        while (!pathCosts.IsEmpty)
+        {
+            var cheapestPath = pathCosts.Extract();
+            int city = cheapestPath.Key;
+            int pathCostToCity = cheapestPath.Value;
+
+            if (city == destinationCity)
+                return pathCostToCity;
+
+            var neighboringEdges = cityGraph[city];
+            for (int e = 0; e < neighboringEdges.Count; ++e)
+            {
+                int neighbor = neighboringEdges[e].Key;
+                if (visitedCities[neighbor])
+                    continue;
+
+                int pathCostToNeighborThroughCity = pathCostToCity + neighboringEdges[e].Value;
+                int currentPathCostToNeighbor;
+
+               
+                if (pathCosts.TryGetValue(neighbor, out currentPathCostToNeighbor))
+                {
+                    if (pathCostToNeighborThroughCity < currentPathCostToNeighbor)
+                    {
+                        pathCosts.Update(neighbor, pathCostToNeighborThroughCity);
+                    }
+                }
+                else
+                {
+                    pathCosts.Add(neighbor, pathCostToNeighborThroughCity);
+                }
+            }
+
+            visitedCities[city] = true;
+        }
+
+        throw new NotSupportedException();
+    }
+}
+
+public sealed class BinaryHeap
+{
+    private readonly List<KeyValuePair<int, int>> _keyValuePairs = new List<KeyValuePair<int, int>>();
+    private readonly Dictionary<int, int> _keyIndices = new Dictionary<int, int>();
+
+    public BinaryHeap(int topKey, int topValue = 0)
+    {
+        _keyValuePairs.Add(new KeyValuePair<int, int>(topKey, topValue));
+        _keyIndices.Add(topKey, 0);
+    }
+
+    public int Size => _keyValuePairs.Count;
+    public bool IsEmpty => Size == 0;
+    public KeyValuePair<int, int> Top => _keyValuePairs[0];
+
+    public void Add(int key, int value)
+        => Add(new KeyValuePair<int, int>(key, value));
+
+    public void Add(KeyValuePair<int, int> keyValuePair)
+    {
+        _keyValuePairs.Add(keyValuePair);
+        _keyIndices.Add(keyValuePair.Key, _keyValuePairs.Count - 1);
+        SiftUp(_keyValuePairs.Count - 1, keyValuePair);
+    }
+
+    public KeyValuePair<int, int> Extract()
+    {
+        var top = _keyValuePairs[0];
+        _keyIndices.Remove(top.Key);
+
+        if (_keyValuePairs.Count == 1)
+        {
+            _keyValuePairs.RemoveAt(0);
+        }
+        else
+        {
+            var bottom = _keyValuePairs[_keyValuePairs.Count - 1];
+            _keyValuePairs.RemoveAt(_keyValuePairs.Count - 1);
+            _keyValuePairs[0] = bottom;
+            _keyIndices[bottom.Key] = 0;
+            SiftDown(0, bottom);
+        }
+
+        return top;
+    }
+
+    public bool Contains(int key)
+        => _keyIndices.ContainsKey(key);
+
+    public int GetValue(int key)
+        => _keyValuePairs[_keyIndices[key]].Value;
+
+    public bool TryGetValue(int key, out int value)
+    {
+        int keyIndex;
+        if (_keyIndices.TryGetValue(key, out keyIndex))
+        {
+            value = _keyValuePairs[keyIndex].Value;
+            return true;
+        }
+
+        value = default(int);
+        return false;
+    }
+
+    public int Update(int key, int value)
+        => Update(new KeyValuePair<int, int>(key, value));
+
+    public int Update(KeyValuePair<int, int> keyValuePair)
+    {
+        int index = _keyIndices[keyValuePair.Key];
+        int oldValue = _keyValuePairs[index].Value;
+        _keyValuePairs[index] = keyValuePair;
+
+        
+        if (oldValue > keyValuePair.Value)
+        {
+            SiftUp(index, keyValuePair);
+        }
+        else
+        {
+            SiftDown(index, keyValuePair);
+        }
+
+        return oldValue;
+    }
+
+    private void SiftUp(int index, KeyValuePair<int, int> keyValuePair)
+    {
+        
+        if (index == 0) return;
+
+        int parentIndex = (index - 1) / 2;
+        var parentKeyValuePair = _keyValuePairs[parentIndex];
+
+        
+        if (parentKeyValuePair.Value > keyValuePair.Value)
+        {
+            _keyValuePairs[index] = parentKeyValuePair;
+            _keyIndices[parentKeyValuePair.Key] = index;
+            _keyValuePairs[parentIndex] = keyValuePair;
+            _keyIndices[keyValuePair.Key] = parentIndex;
+            SiftUp(parentIndex, keyValuePair);
+        }
+    }
+
+    private void SiftDown(int index, KeyValuePair<int, int> keyValuePair)
+    {
+        int leftChildIndex = 2 * index + 1;
+        int rightChildIndex = 2 * index + 2;
+
+        
+        if (rightChildIndex < _keyValuePairs.Count)
+        {
+            var leftChildKeyValuePair = _keyValuePairs[leftChildIndex];
+            var rightChildKeyValuePair = _keyValuePairs[rightChildIndex];
+
+            
+            if (leftChildKeyValuePair.Value < rightChildKeyValuePair.Value)
+            {
+              
+                if (keyValuePair.Value > leftChildKeyValuePair.Value)
+                {
+                    _keyValuePairs[index] = leftChildKeyValuePair;
+                    _keyIndices[leftChildKeyValuePair.Key] = index;
+                    _keyValuePairs[leftChildIndex] = keyValuePair;
+                    _keyIndices[keyValuePair.Key] = leftChildIndex;
+                    SiftDown(leftChildIndex, keyValuePair);
+                }
+            }
+            
+            else
+            {
+               
+                if (keyValuePair.Value > rightChildKeyValuePair.Value)
+                {
+                    _keyValuePairs[index] = rightChildKeyValuePair;
+                    _keyIndices[rightChildKeyValuePair.Key] = index;
+                    _keyValuePairs[rightChildIndex] = keyValuePair;
+                    _keyIndices[keyValuePair.Key] = rightChildIndex;
+                    SiftDown(rightChildIndex, keyValuePair);
+                }
+            }
+        }
+        
+        else if (leftChildIndex < _keyValuePairs.Count)
+        {
+            var leftChildKeyValuePair = _keyValuePairs[leftChildIndex];
+
+            
+            if (keyValuePair.Value > leftChildKeyValuePair.Value)
+            {
+                _keyValuePairs[index] = leftChildKeyValuePair;
+                _keyIndices[leftChildKeyValuePair.Key] = index;
+                _keyValuePairs[leftChildIndex] = keyValuePair;
+                _keyIndices[keyValuePair.Key] = leftChildIndex;
+            }
+        }
+    }
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        var output = new StringBuilder();
+        int testCount = FastIO.ReadNonNegativeInt();
+        for (int t = 0; t < testCount; ++t)
+        {
+            int cityCount = FastIO.ReadNonNegativeInt();
+            var cityIndices = new Dictionary<string, int>(cityCount);
+            var cityGraph = new List<KeyValuePair<int, int>>[cityCount];
+
+            for (int c = 0; c < cityCount; ++c)
+            {
+                cityIndices.Add(FastIO.ReadString(), c);
+                cityGraph[c] = new List<KeyValuePair<int, int>>();
+
+                int neighborCount = FastIO.ReadNonNegativeInt();
+                for (int n = 0; n < neighborCount; ++n)
+                {
+                    int neighborIndex = FastIO.ReadNonNegativeInt() - 1;
+                    int connectionCost = FastIO.ReadNonNegativeInt();
+
+                    cityGraph[c].Add(new KeyValuePair<int, int>(neighborIndex, connectionCost));
+                }
+            }
+
+            int pathCount = FastIO.ReadNonNegativeInt();
+            for (int p = 0; p < pathCount; ++p)
+            {
+                int sourceCity = cityIndices[FastIO.ReadString()];
+                int destinationCity = cityIndices[FastIO.ReadString()];
+
+                output.Append(
+                    SHPATH.Solve(cityGraph, sourceCity, destinationCity));
+                output.AppendLine();
+            }
+        }
+
+        Console.Write(output);
+    }
+}
+
+
+public static class FastIO
+{
+    private const byte _null = (byte)'\0';
+    private const byte _newLine = (byte)'\n';
+    private const byte _minusSign = (byte)'-';
+    private const byte _zero = (byte)'0';
+    private const int _inputBufferLimit = 8192;
+    private const int _stringLengthLimit = 12;
+
+    private static readonly Stream _inputStream = Console.OpenStandardInput();
+    private static readonly byte[] _inputBuffer = new byte[_inputBufferLimit];
+    private static int _inputBufferSize = 0;
+    private static int _inputBufferIndex = 0;
+    private static readonly char[] _stringBuilder = new char[_stringLengthLimit];
+
+    private static byte ReadByte()
+    {
+        if (_inputBufferIndex == _inputBufferSize)
+        {
+            _inputBufferIndex = 0;
+            _inputBufferSize = _inputStream.Read(_inputBuffer, 0, _inputBufferLimit);
+            if (_inputBufferSize == 0)
+                return _null; 
+        }
+
+        return _inputBuffer[_inputBufferIndex++];
+    }
+
+    public static int ReadNonNegativeInt()
+    {
+        byte digit;
+
+        
+        do
+        {
+            digit = ReadByte();
+        }
+        while (digit < _minusSign);
+
+        
+        int result = digit - _zero;
+        while (true)
+        {
+            digit = ReadByte();
+            if (digit < _zero) break;
+            result = result * 10 + (digit - _zero);
+        }
+
+        return result;
+    }
+
+    public static string ReadString()
+    {
+        byte letter;
+
+        
+        do
+        {
+            letter = ReadByte();
+        }
+        while (letter < _minusSign);
+
+        int stringLength = 0;
+        _stringBuilder[stringLength++] = (char)letter;
+        while (true)
+        {
+            letter = ReadByte();
+            if (letter < _zero) break;
+            _stringBuilder[stringLength++] = (char)letter;
+        }
+
+        return new string(_stringBuilder, 0, stringLength);
+    }
+}
+// Zadanie BOMARBLE
+using System;
+
+
+public static class BOMARBLE
+{
+    
+    public static int Solve(int n)
+        => (3 * n * n + 5 * n + 2) / 2;
+}
+
+public static class Program
+{
+    private static void Main()
+    {
+        int n;
+        while ((n = int.Parse(Console.ReadLine())) != 0)
+        {
+            Console.WriteLine(
+                BOMARBLE.Solve(n));
+        }
+    }
+}
+// Zadanie ENUMRTNL
+using System;
+using System.Collections.Generic;
+
+public static class Globals
+{
+
+	public static int[][] num = RectangularArrays.RectangularIntArray(DefineConstants.lim, 2);
+	public static int test;
+	public static int x;
+	public static int y;
+	public static int mid;
+	public static int iter;
+	public static int n;
+	public static int pro;
+	public static int rem;
+	public static int count;
+	public static long[] euler = new long[DefineConstants.lim];
+	public static long frac;
+
+	List< List<int>> divisors(DefineConstants.lim);
+	public static bool[] cal = new bool[DefineConstants.lim];
+	internal static void Main()
+	{
+		for (int i = 2;i < DefineConstants.lim;i++)
+		{
+			num[i][0] = i;
+			num[i][1] = 1;
+		}
+		int p = 2;
+		int q;
+		while (true)
+		{
+			while (num[p][0] == 1)
+			{
+				p++;
+			}
+			if (p >= DefineConstants.sv)
+			{
+				break;
+			}
+			for (int i = p;i < DefineConstants.lim;i += p)
+			{
+				num[i][1] *= p - 1;
+				num[i][0] /= p;
+				divisors[i].push_back(p);
+			}
+			q = p * p;
+			do
+			{
+				for (int i = q;i < DefineConstants.lim;i += q)
+				{
+					num[i][1] *= p;
+					num[i][0] /= p;
+				}
+				q *= p;
+			}while (q < DefineConstants.lim);
+			p++;
+		}
+		for (int i = DefineConstants.sv;i < DefineConstants.lim;i++)
+		{
+			if (num[i][0] != 1)
+			{
+				//printf("i=%d\n",i);
+				num[i][1] *= (num[i][0] - 1);
+				//printf("%d\n",num[i][0]);
+				divisors[i].push_back(num[i][0]);
+			}
+		}
+		for (int i = 3;i < DefineConstants.lim;i++)
+		{
+			euler[i] = euler[i - 1] + num[i][1] / 2;
+		}
+
+		string tempVar = ConsoleInput.ScanfRead();
+		if (tempVar != null)
+		{
+			test = int.Parse(tempVar);
+		}
+		while ((test--) != 0)
+		{
+			string tempVar2 = ConsoleInput.ScanfRead();
+			if (tempVar2 != null)
+			{
+				frac = long.Parse(tempVar2);
+			}
+			x = 2;
+			y = DefineConstants.lim - 1;
+			while (x < y - 1)
+			{
+				mid = (x + y) / 2;
+				if (euler[mid] >= frac)
+				{
+					y = mid;
+				}
+				else
+				{
+					x = mid;
+				}
+			}
+			frac -= euler[x];
+			pro = count = 1;
+			for (int i = 0;i < divisors[y].size();i++)
+			{
+				pro *= divisors[y][i];
+				count *= (divisors[y][i] - 1);
+			}
+			rem = (int)(frac % count);
+			if (rem == 0)
+			{
+				n = (int)(pro * (frac / count) - 1);
+			}
+			else
+			{
+
+				memset(cal,0,pro);
+				for (int i = 0;i < divisors[y].size();i++)
+				{
+					for (int j = divisors[y][i];j < pro;j += divisors[y][i])
+					{
+						cal[j] = true;
+					}
+				}
+				for (int i = 1;i < y;i++)
+				{
+					if (cal[i] == false)
+					{
+						rem--;
+						if (rem == 0)
+						{
+							n = (int)(pro * (frac / count) + i);
+							break;
+						}
+					}
+				}
+			}
+			Console.Write("{0:D} {1:D}\n",n,y - n);
+		}
+	}
+}
+
+internal static class DefineConstants
+{
+	public const int lim = 820000;
+	public const int sv = 905;
+}
+
+
+internal static class ConsoleInput
+{
+	private static bool goodLastRead = false;
+	public static bool LastReadWasGood
+	{
+		get
+		{
+			return goodLastRead;
+		}
+	}
+
+	public static string ReadToWhiteSpace(bool skipLeadingWhiteSpace)
+	{
+		string input = "";
+
+		char nextChar;
+		while (char.IsWhiteSpace(nextChar = (char)System.Console.Read()))
+		{
+			
+			if (!skipLeadingWhiteSpace)
+				input += nextChar;
+		}
+		
+		input += nextChar;
+
+		
+		while (!char.IsWhiteSpace(nextChar = (char)System.Console.Read()))
+		{
+			input += nextChar;
+		}
+
+		goodLastRead = input.Length > 0;
+		return input;
+	}
+
+	public static string ScanfRead(string unwantedSequence = null, int maxFieldLength = -1)
+	{
+		string input = "";
+
+		char nextChar;
+		if (unwantedSequence != null)
+		{
+			nextChar = '\0';
+			for (int charIndex = 0; charIndex < unwantedSequence.Length; charIndex++)
+			{
+				if (char.IsWhiteSpace(unwantedSequence[charIndex]))
+				{
+					
+					while (char.IsWhiteSpace(nextChar = (char)System.Console.Read()))
+					{
+					}
+				}
+				else
+				{
+					
+					nextChar = (char)System.Console.Read();
+					if (nextChar != unwantedSequence[charIndex])
+						return null;
+				}
+			}
+
+			input = nextChar.ToString();
+			if (maxFieldLength == 1)
+				return input;
+		}
+
+		while (!char.IsWhiteSpace(nextChar = (char)System.Console.Read()))
+		{
+			input += nextChar;
+			if (maxFieldLength == input.Length)
+				return input;
+		}
+
+		return input;
+	}
+}
+
+internal static class RectangularArrays
+{
+	public static int[][] RectangularIntArray(int size1, int size2)
+	{
+		int[][] newArray = new int[size1][];
+		for (int array1 = 0; array1 < size1; array1++)
+		{
+			newArray[array1] = new int[size2];
+		}
+
+		return newArray;
+	}
+}
